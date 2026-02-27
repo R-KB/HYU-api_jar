@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.app.mapper.ScoreMapper">
+
+	<resultMap id="joinMap" type="score">
+		<id property="id" column="id" />
+		<result property="thumb" column="thumb" />
+		<result property="pointH" column="point_h" />
+		<result property="pointY" column="point_y" />
+		<result property="pointU" column="point_u" />
+		<result property="registered" column="registered" />
+		<result property="updated" column="updated" />
+		<association property="recipe" javaType="Recipe">
+			<id property="id" column="id" />
+		</association>
+	</resultMap>
+
+	<sql id="Scores">
+		SELECT score.id, thumb, point_h, point_y, point_u,
+		score.registered,
+		score.updated, recipe.id AS recipe_id
+		FROM score
+		JOIN
+		recipe ON score.recipe_id = recipe.id
+	</sql>
+
+	<select id="selectScores" resultMap="joinMap">
+		<include refid="Scores" />
+	</select>
+
+	<select id="selectScoreById" resultMap="joinMap"
+		parameterType="int">
+		<include refid="Scores" />
+		WHERE score.id = #{id}
+	</select>
+
+	<select id="selectScoreByRecipe" resultMap="joinMap"
+		parameterType="int">
+		<include refid="Scores" />
+		WHERE recipe.id = #{recipe.id}
+	</select>
+
+	<insert id="insert" parameterType="Score">
+		INSERT INTO score (recipe_id,
+		thumb, point_h, point_y, point_u)
+		VALUES (#{recipeId}, #{thumb},
+		#{pointH}, #{pointY}, #{pointU})
+	</insert>
+
+	<update id="update" parameterType="Score">
+		UPDATE score SET recipe_id =
+		#{recipeId}, thumb = #{thumb}, point_h = #{pointH},
+		point_y =
+		#{pointY}, point_U = #{pointU} WHERE id = #{scoreId}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM score WHERE id =
+		#{scoreId}
+	</delete>
+
+	<!-- ここから並び替え用 / すべて降順 -->
+
+	<!-- いいね順 -->
+	<select id="selectScoreOrderByThumbDesc" resultMap="joinMap">
+		<include refid="Scores" />
+		ORDER BY thumb DESC
+	</select>
+
+	<!-- Hボタン順 -->
+	<select id="selectScoreOrderByHDesc" resultMap="joinMap">
+		<include refid="Scores" />
+		ORDER BY point_h DESC
+	</select>
+
+	<!-- Yボタン順 -->
+	<select id="selectScoreOrderByYDesc" resultMap="joinMap">
+		<include refid="Scores" />
+		ORDER BY point_y DESC
+	</select>
+
+	<!-- Uボタン順 -->
+	<select id="selectScoreOrderByUDesc" resultMap="joinMap">
+		<include refid="Scores" />
+		ORDER BY point_u DESC
+	</select>
+
+
+
+</mapper>

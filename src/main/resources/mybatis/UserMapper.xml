@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.app.mapper.UserMapper">
+
+	<resultMap id="joinMap" type="User" autoMapping="true">
+		<id property="id" column="id" />
+	</resultMap>
+
+	<sql id="Users">
+		SELECT
+		user.id, user.login_id, user.pass, user.name,
+		user.email, user.registered,
+		user.updated
+		FROM user
+	</sql>
+
+	<select id="selectUsers" resultMap="joinMap">
+		<include refid="Users" />
+	</select>
+
+	<select id="selectUserById" resultMap="joinMap"
+		parameterType="int">
+		<include refid="Users" />
+		WHERE id = #{id}
+	</select>
+
+	<insert id="insert" parameterType="User">
+		INSERT INTO user (login_id,
+		pass, name, email) VALUES
+		(#{loginId}, #{pass}, #{name}, #{email})
+	</insert>
+
+	<update id="update" parameterType="User">
+		UPDATE user set
+		login_id =
+		#{loginId}, pass = #{pass},
+		name = #{name}, email = #{email}
+		WHERE id =
+		#{id}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM user WHERE id =
+		#{id}
+	</delete>
+
+
+
+</mapper>

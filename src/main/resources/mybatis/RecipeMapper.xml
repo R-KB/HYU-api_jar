@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.app.mapper.RecipeMapper">
+
+	<resultMap id="joinMap" type="Recipe" autoMapping="true">
+		<id property="id" column="id" />
+		<association property="user" javaType="User"
+			resultMap="userMap" />
+	</resultMap>
+
+	<resultMap id="userMap" type="User" autoMapping="true">
+		<id property="id" column="id" />
+	</resultMap>
+
+	<sql id="Recipes">
+		SELECT recipe.id, recipe.user_id, recipe.title, recipe.img,
+		recipe.ingredient,
+		recipe.recipe,
+		recipe.outro,
+		recipe.registered,
+		recipe.updated, user.id
+		AS user_id, user.name AS user_name
+		FROM recipe
+		JOIN user
+		ON
+		recipe.user_id =
+		user.id
+	</sql>
+
+	<select id="selectRecipes" resultMap="joinMap">
+		<include refid="Recipes" />
+	</select>
+
+	<select id="selectRecipeById" resultMap="joinMap"
+		parameterType="int">
+		<include refid="Recipes" />
+		WHERE recipe.id = #{id}
+	</select>
+
+	<select id="selectRecipeByUser" resultMap="joinMap"
+		parameterType="int">
+		<include refid="Recipes" />
+		WHERE recipe.user_id = #{userId}
+	</select>
+
+	<insert id="insert" parameterType="Recipe">
+		INSERT INTO recipe (user_id,
+		title, img,
+		ingredient, recipe, outro) VALUES
+		(#{userId}, #{title},
+		#{img}, #{ingredient}, #{recipe}, #{outro})
+	</insert>
+
+	<update id="update" parameterType="Recipe">
+		UPDATE recipe SET title =
+		#{title}, img = #{img}, ingredient = #{ingredient},
+		recipe = #{recipe},
+		outro = #{outro}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM recipe WHERE id =
+		#{id}
+	</delete>
+
+	<select id="selectRecipesOrderByRecent" resultMap="joinMap">
+		<include refid="Recipes" />
+		ORDER BY recipe.id DESC
+	</select>
+
+
+</mapper>
