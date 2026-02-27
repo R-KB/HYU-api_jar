@@ -6,16 +6,20 @@ import lombok.Data;
 
 @Data
 public class Comment {
-	
+
 	private Integer id;
-	
+
+	private Integer recipeId;
+
+	private Integer userId;
+
 	private String comment;
-	
+
 	private LocalDateTime registered;
-	
+
 	private LocalDateTime updated;
-	
+
 	private Recipe recipe;
-	
+
 	private User user;
 }

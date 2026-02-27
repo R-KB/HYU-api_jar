@@ -5,11 +5,15 @@
 <mapper namespace="com.example.app.mapper.CommentMapper">
 
 	<resultMap id="joinMap" type="Comment" autoMapping="true">
-		<id property="commentId" column="id" />
+		<id property="id" column="id" />
 		<association property="recipe" resultMap="recipeMap" />
+		<association property="user" resultMap="userMap" />
 	</resultMap>
 	<resultMap id="recipeMap" type="Recipe" autoMapping="true">
-		<id property="recipeId" column="id" />
+		<id property="id" column="id" />
+	</resultMap>
+	<resultMap id="userMap" type="User" autoMapping="true">
+		<id property="id" column="id" />
 	</resultMap>
 
 	<sql id="Comments">
@@ -31,7 +35,7 @@
 	<select id="selectCommentById" resultMap="joinMap"
 		parameterType="int">
 		<include refid="Comments" />
-		WHERE comment.id = #{commentId}
+		WHERE comment.id = #{id}
 	</select>
 
 	<select id="selectCommentByUser" resultMap="joinMap"
@@ -54,12 +58,12 @@
 
 	<update id="update" parameterType="Comment">
 		UPDATE comment SET comment =
-		#{comment} WHERE id = #{commentId}
+		#{comment} WHERE id = #{id}
 	</update>
 
 	<delete id="delete" parameterType="int">
 		DELETE FROM comment WHERE id =
-		#{commentId}
+		#{id}
 	</delete>
 
 

@@ -41,14 +41,14 @@ public class CommentApiController {
 		return new ResponseEntity<>(comment, status);
 	}
 
-	@GetMapping("/{userId}")
+	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<Comment>> getCommentByUser(@PathVariable int userId) {
 		List<Comment> comments = service.getCommentByUser(userId);
 		HttpStatus status = comments == null ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
 		return new ResponseEntity<>(comments, status);
 	}
 
-	@GetMapping("/{recipeId}")
+	@GetMapping("/recipe/{recipeId}")
 	public ResponseEntity<Comment> getCommentByRecipe(@PathVariable int recipeId) {
 		Comment comment = service.getCommentByRecipe(recipeId);
 		HttpStatus status = comment == null ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
